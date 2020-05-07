@@ -1,0 +1,11 @@
+{
+  "name": "robo-chat",
+  "version": "1.0.0",
+  "description": "Robo-chat - Chat example app based on React, Node.js and socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "Yaniv Shiloah",
+  "license": "ISC"
+}
