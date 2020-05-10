@@ -6,9 +6,10 @@ Robo-chat - Chat example app based on React, Node.js and socket.io
 ## instructions
 
 ### run locally:
-	>npm start:dev
+	> npm start:dev
 	will run the project in development mode (hot reloads on every change)
 
+### run on production:
 	>npm build:prod
 	will build the project in production mode
 
