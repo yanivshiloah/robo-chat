@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import _ from 'lodash';
 import User from './User';
-import Fade from './Fade';
 
 const Container = styled.div`
     flex: 0 0 120px;

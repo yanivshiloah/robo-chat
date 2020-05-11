@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -44,44 +43,76 @@ const Button = styled.button`
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 `
 
-const ChatInput = (props) => {
+const INITIAL_TEXT = '';
+const IDLE_TIME = 10000;
 
-    const [text, setText] = useState('');
-
-    const onChange = (e) => {
-        setText(e.target.value);
+export default class ChatInput extends Component {
+    state = {
+        text: INITIAL_TEXT
     };
 
-    const submitDraft = () => {
-        props.submitDraft(text);
-        setText('');
-        props.setTyping(false);
+    clearTypingTimerId = null;
+
+    componentDidUpdate(prevProps, prevState) {
+        const {typing, setTyping} = this.props;
+        const {text} = this.state;
+        if (text !== prevState.text) {
+            this.clearTypingHandler();
+            if (typing) {
+                this.clearTypingTimerId = setTimeout(() => {
+                    setTyping(false)
+                }, IDLE_TIME);
+            }
+        }
     }
 
-    const onKeyDown = (e) => {
-        if (e.target.value === '' && props.typing) {
-            props.setTyping(false);
+    componentWillUnmount() {
+        this.clearTypingHandler();
+    }
+
+    clearTypingHandler = () => {
+        clearTimeout(this.clearTypingTimerId);
+        this.clearTypingTimerId = null;
+    }
+
+    setText = (text) => this.setState(() => ({text}));
+
+    onChange = (e) => {
+        this.setText(e.target.value);
+    };
+
+    submitDraft = () => {
+        this.setText(INITIAL_TEXT);
+        this.props.submitDraft(this.state.text);
+        this.props.setTyping(false);
+    }
+
+    onKeyDown = (e) => {
+        const {typing, setTyping} = this.props;
+        const {value} = e.target;
+        if (value === '' && typing) {
+            setTyping(false);
         }
-        if (e.target.value !== '' && !props.typing) {
-            props.setTyping(true);
+        if (value !== '' && !typing) {
+            setTyping(true);
         }
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            submitDraft(e.target.value);
+            this.submitDraft(value);
         }
     }
 
-    return <Container>
-        <TextareaContainer>
-            <Textarea value={text}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-            />
-        </TextareaContainer>
-        <Button onClick={submitDraft}>
-            Send!
-        </Button>
-    </Container>
-};
-
-export default ChatInput;
+    render() {
+        return (<Container>
+            <TextareaContainer>
+                <Textarea value={this.state.text}
+                          onChange={this.onChange}
+                          onKeyDown={this.onKeyDown}
+                />
+            </TextareaContainer>
+            <Button onClick={this.submitDraft}>
+                Send!
+            </Button>
+        </Container>)
+    }
+}

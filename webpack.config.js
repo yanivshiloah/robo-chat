@@ -42,6 +42,10 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: path.resolve(__dirname, '/public/index.html'),
+                loader: 'prerender-loader?string'
             }
         ]
     },

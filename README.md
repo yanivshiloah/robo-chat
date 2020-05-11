@@ -1,6 +1,6 @@
 # robo-chat
 
-Robo-chat - Chat example app based on React, Node.js and socket.io
+Robo-chat - Chat example app based on Node.js, socket.io and styled-components. Built using Webpack
 
 
 ## instructions
